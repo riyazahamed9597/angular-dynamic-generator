@@ -1,0 +1,50 @@
+/* Mat-select styled like Bootstrap dropdown */
+.bootstrap-select .mat-mdc-text-field-wrapper {
+    border: 1px solid #ced4da !important;
+    border-radius: 0.375rem !important;
+    padding: 0.375rem 0.75rem !important;
+    background-color: #fff !important;
+  }
+  
+  .bootstrap-select .mat-mdc-select {
+    font-size: 1rem !important;
+    color: #495057 !important;
+  }
+  
+  .bootstrap-select .mat-mdc-select-arrow {
+    color: #495057 !important;
+  }
+
+  ::ng-deep .mat-form-field-appearance-outline.mat-form-field-disabled,
+::ng-deep .mat-form-field-outline {
+    opacity: 0;
+    display: none;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-wrapper .mat-form-field-flex{
+    padding-left: 0;
+    padding-right: 0;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-wrapper{
+    padding-bottom: 0;
+    margin-bottom: 0px !important;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-infix {
+    padding: 0;
+    border:0;
+}
+::ng-deep  .mat-form-field-appearance-outline:not(.mat-form-field-disabled) .mat-form-field-flex:hover .mat-form-field-outline {
+    opacity: 0;
+    transition: opacity .6s cubic-bezier(.25,.8,.25,1);
+}
+  .bootstrap-select .mat-mdc-form-field-subscript-wrapper {
+    display: none !important; /* Hide default Material error text to use Bootstrap styles */
+  }
+  
+  /* Ensuring full width responsiveness */
+  .bootstrap-select {
+    width: 100%;
+  }
+  

@@ -1,0 +1,185 @@
+<div class="container mt-5">
+  <form [formGroup]="insurancesForm" (ngSubmit)="onSubmit()">
+    <div class="row g-3">
+      <!-- Product Dropdown -->
+      <div class="col-12 col-md-6">
+        <div class="form-group">
+          <label for="productId" class="form-label">Select Product</label>
+          <select class="form-select" id="productId" formControlName="productId"
+            [ngClass]="{'is-invalid': insurancesForm.get('productId')?.invalid && insurancesForm.get('productId')?.touched}">
+            <option value="">-- Select Product --</option>
+            <option *ngFor="let product of insuranceData" [value]="product.id">
+              {{ product.productName }}
+            </option>
+          </select>
+          <div *ngIf="insurancesForm.get('productId')?.invalid && insurancesForm.get('productId')?.touched"
+            class="invalid-feedback">
+            Please select a product.
+          </div>
+        </div>
+      </div>
+
+      <!-- Sub Product Dropdown -->
+      <div class="col-12 col-md-6">
+        <div class="form-group">
+          <label for="subProductId" class="form-label">Select Sub Product</label>
+          <select class="form-select" id="subProductId" formControlName="subProductId"
+            [ngClass]="{'is-invalid': insurancesForm.get('subProductId')?.invalid && insurancesForm.get('subProductId')?.touched}">
+            <option value="">-- Select Sub Product --</option>
+            <option *ngFor="let subProduct of subProducts" [value]="subProduct.id">
+              {{ subProduct.name }}
+            </option>
+          </select>
+          <div *ngIf="insurancesForm.get('subProductId')?.invalid && insurancesForm.get('subProductId')?.touched"
+            class="invalid-feedback">
+            Please select a sub-product.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container mt-4" *ngIf="showFields && subProductByData.length !== 0">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h4 class="card-title mb-0 py-3">Sub-Product Details</h4>
+            </div>
+            <div class="card-body table-responsive">
+              <table class="table table-bordered table-striped">
+                <thead>
+                  <tr class="text-center">
+                    <th>Name</th>
+                    <th>Path</th>
+                    <th>Icon</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let subProductList of subProductByData" class="text-center">
+                    <td>{{ subProductList.name }}</td>
+                    <td>{{ subProductList.path }}</td>
+                    <td>{{ subProductList.icon }}</td>
+                    <td>
+                      <div class="d-flex justify-content-center align-items-center gap-3">
+                        <button type="button" class="border-0 bg-transparent d-flex"
+                          (click)="getEditDetailSubProductById(subProductList.id)" matTooltip="Edit">
+                          <i class="bi bi-pencil-square"></i>
+                        </button>
+                        <button type="button" class="border-0 bg-transparent d-flex"
+                          (click)="openDeleteModal(subProductList.id)" matTooltip="Delete">
+                          <i class="bi bi-trash text-danger"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container mt-4" *ngIf="showFields && subProducts.length !== 0">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4 class="card-title mb-0 py-3">{{ cardTitle }}</h4>
+          <div class="col col-md-2 text-end">
+            <button type="button" class="btn btn-primary" (click)="resetFields()"><i class="bi bi-bootstrap-reboot"></i>
+              Reset</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <!-- Fields Section (Visible after sub-product selection) -->
+          <div class="row mt-3" *ngIf="showFields && subProducts.length !== 0">
+            <!-- Name Field -->
+            <div class="col-12 col-md-6">
+              <div class="form-group">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" formControlName="name"
+                  [ngClass]="{'is-invalid': insurancesForm.get('name')?.invalid && insurancesForm.get('name')?.touched}" />
+                <div *ngIf="insurancesForm.get('name')?.invalid && insurancesForm.get('name')?.touched"
+                  class="invalid-feedback">
+                  Name is required.
+                </div>
+              </div>
+            </div>
+
+            <!-- Path Field -->
+            <div class="col-12 col-md-6">
+              <div class="form-group">
+                <label for="path" class="form-label">Path</label>
+                <input type="text" class="form-control" id="path" formControlName="path"
+                  [ngClass]="{'is-invalid': insurancesForm.get('path')?.invalid && insurancesForm.get('path')?.touched}" />
+                <div *ngIf="insurancesForm.get('path')?.invalid && insurancesForm.get('path')?.touched"
+                  class="invalid-feedback">
+                  Path is required.
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Icon Field -->
+          <div class="row mt-3" *ngIf="showFields && subProducts.length !== 0">
+            <div class="col-12 col-md-6">
+              <div class="form-group">
+                <label for="icon" class="form-label">Icon</label>
+                <input type="text" class="form-control" id="icon" formControlName="icon"
+                  [ngClass]="{'is-invalid': insurancesForm.get('icon')?.invalid && insurancesForm.get('icon')?.touched}" />
+                <div *ngIf="insurancesForm.get('icon')?.invalid && insurancesForm.get('icon')?.touched"
+                  class="invalid-feedback">
+                  Icon is required.
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Dynamic Fields Section -->
+          <div class="card my-3 p-3" *ngIf="showFields && subProducts.length !== 0">
+            <div class="form-group" formArrayName="fields">
+              <div *ngFor="let field of fields.controls; let i = index" [formGroupName]="i" class="mb-3">
+                <div class="row align-items-end">
+                  <!-- Title Field -->
+                  <div class="col-12 col-md-4">
+                    <div class="form-group">
+                      <label for="title-{{i}}" class="form-label">Title</label>
+                      <input type="text" class="form-control" id="title-{{i}}" formControlName="title">
+                    </div>
+                  </div>
+
+                  <!-- Keys Field with mat-select -->
+                  <div class="col-12 col-md-6">
+                    <div class="form-group">
+                      <label for="keys-{{i}}" class="form-label">Keys</label>
+                      <mat-form-field class="w-100 bootstrap-select" appearance="outline">
+                        <mat-select formControlName="keys" multiple class="form-select">
+                          <mat-option *ngFor="let key of tableComponentData" [value]="key.id">
+                            {{ key.name }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <!-- Remove Button -->
+                  <div class="col-12 col-md-2 text-end">
+                    <button type="button" class="btn btn-danger w-100" (click)="removeField(i)">Remove</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Add Field Button -->
+            <div class="text-start">
+              <button type="button" class="btn btn-success" (click)="addField()">Add Field</button>
+            </div>
+          </div>
+          <!-- Submit Button -->
+          <div class="col-md-12 text-center d-flex justify-content-center align-items-center my-3">
+            <button type="submit" class="btn btn-primary w-25" [disabled]="insurancesForm.invalid">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- <app-delete-confirmation [deleteId]="deleteId" (confirmDelete)="onDeleteConfirmed($event)"></app-delete-confirmation> -->

@@ -1,0 +1,30 @@
+<!-- Navbar always visible -->
+<nav class="navbar navbar-light bg-light">
+  <div class="container-fluid">
+    <!-- Show back button when not on home page -->
+    <button *ngIf="!isHomePage" 
+            class="btn btn-outline-secondary"
+            (click)="goBack()">
+      Back
+    </button>
+    
+    <a class="navbar-brand" href="#">
+      <img src="../assets/coverton-logo-01.svg" alt="" width="140" height="45" class="d-inline-block align-text-top">
+    </a>
+  </div>
+</nav>
+
+<!-- Buttons only visible on home page -->
+<div *ngIf="isHomePage" class="container mt-3">
+  <div class="d-grid gap-2">
+    <button class="btn btn-primary" (click)="navigateTo('dynamic-table-generate')">
+      Create Component Master
+    </button>
+    <button class="btn btn-primary" (click)="navigateTo('dynamic-table-transaction')">
+      Create Dynamic Table Master
+    </button>
+  </div>
+</div>
+
+<!-- Router outlet for displaying components -->
+<router-outlet *ngIf="!isHomePage"></router-outlet>

@@ -1,0 +1,65 @@
+<div class="mt-2">
+    <h2 class="text-center mb-4">Edit Component</h2>
+    <div class="">
+        <form [formGroup]="editForm" class="w-100">
+            <div formArrayName="actions">
+                <div class="row g-3 p-3 border border-secondary-subtle border-2 m-1 rounded shadow-sm bg-light"
+                    *ngFor="let action of actions.controls; let i = index" [formGroupName]="i">
+
+                    <!-- Name Input -->
+                    <div class="col-md-4 form-group">
+                        <label class="form-label fw-semibold">Name:</label>
+                        <input type="text" formControlName="name" class="form-control"
+                            [ngClass]="{'is-invalid': actions.get(i.toString())?.get('name')?.invalid && actions.get(i.toString())?.get('name')?.touched}"
+                            placeholder="Enter name" />
+                        <div *ngIf="actions.get(i.toString())?.get('name')?.invalid && actions.get(i.toString())?.get('name')?.touched"
+                            class="invalid-feedback">
+                            Name is required.
+                        </div>
+                    </div>
+
+                    <!-- Key Input -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Key:</label>
+                        <input type="text" formControlName="key" class="form-control"
+                            [ngClass]="{'is-invalid': actions.get(i.toString())?.get('key')?.invalid && actions.get(i.toString())?.get('key')?.touched}"
+                            placeholder="Enter key" />
+                        <div *ngIf="actions.get(i.toString())?.get('key')?.invalid && actions.get(i.toString())?.get('key')?.touched"
+                            class="invalid-feedback">
+                            Key is required.
+                        </div>
+                    </div>
+
+                    <!-- Type Dropdown -->
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Type:</label>
+                        <select formControlName="type" class="form-select"
+                            [ngClass]="{'is-invalid': actions.get(i.toString())?.get('type')?.invalid && actions.get(i.toString())?.get('type')?.touched}"
+                            (change)="onTypeChange($event, i)">
+                            <option value="" disabled>Select type</option>
+                            <option *ngFor="let option of typeOptions" [value]="option">{{ option }}</option>
+                        </select>
+                        <div *ngIf="actions.get(i.toString())?.get('type')?.invalid && actions.get(i.toString())?.get('type')?.touched"
+                            class="invalid-feedback">
+                            Type is required.
+                        </div>
+                    </div>
+                    <!-- Options Input (Only Show if Type is Dropdown) -->
+                    <div class="col-md-4" *ngIf="actions.at(i).get('type')?.value === 'dropdown'">
+                        <label class="form-label fw-semibold">Options:</label>
+                        <input type="text" class="form-control" placeholder="Enter options (comma separated)"
+                            (input)="onOptionsChange($event, i)" />
+                    </div>
+                    <!-- Add Component Button -->
+                    <div class="col-12 d-flex justify-content-center my-3">
+                        <button type="button" class="btn btn-primary px-4 rounded-pill shadow"
+                        [disabled]="editForm.pristine || editForm.invalid" (click)="updateComponent()">
+                            <i class="bi bi-plus-lg"></i> Edit Component
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
